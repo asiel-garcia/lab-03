@@ -25,6 +25,7 @@ def load_mail() -> List[Dict[str, str]]:
 def save_mail(mail: List[Dict[str, str]]) -> None:
     """TODO: fill out this docstring (using the load_mail docstring as a guide)
     """
+    #with open('mail_db.json','w') as file:
     thisdir.joinpath('mail_db.json').write_text(json.dumps(mail, indent=4))
 
 def add_mail(mail_entry: Dict[str, str]) -> str:
@@ -107,8 +108,14 @@ def delete_mail_route(mail_id: str):
         bool: True if the mail was deleted, False otherwise
     """
     # TODO: implement this function
-    pass # remove this line
-
+    #pass # remove this line
+    
+    #mail_entry = request.get_json()
+    #mail_entry = delete_mail(mail_id)
+    res=jsonify({'deleted':delete_mail(mail_id)})
+    res.status_code=200
+    return res
+    
 @app.route('/mail/<mail_id>', methods=['GET'])
 def get_mail_route(mail_id: str):
     """
@@ -142,7 +149,12 @@ def get_inbox_route(recipient: str):
 # TODO: implement a rout e to get all mail entries for a sender
 # HINT: start with soemthing like this:
 #   @app.route('/mail/sent/<sender>', ...)
-
+@app.route('/mail/sent/<sender>', methods=['GET'])
+def get_sender_route(sender:str):
+	
+	res=jsonify(get_sent(sender))
+	res.status_code=200
+	return res
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
